@@ -1,0 +1,99 @@
+---
+const startDate = new Date('1985-04-26');
+const currentDate = new Date('2025-02-24');
+
+// Calculate complete years
+const completeYears = Math.floor((currentDate - startDate) / (365.25 * 24 * 60 * 60 * 1000));
+const completeYearWeeks = completeYears * 52;
+
+// Calculate remaining weeks in current year
+const yearStartDate = new Date(startDate);
+yearStartDate.setFullYear(yearStartDate.getFullYear() + completeYears);
+const remainingWeeks = Math.floor((currentDate - yearStartDate) / (7 * 24 * 60 * 60 * 1000));
+
+// Total weeks lived
+const weeksLived = completeYearWeeks + remainingWeeks;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Η ζωή μου σε εβδομάδες</title>
+		<style>
+			:root {
+				--square-size: 12px;
+				--square-gap: 3px;
+				--group-gap: 8px;
+			}
+
+			body {
+				background: white;
+				margin: 0;
+				padding: 2rem;
+				font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif; 
+			}
+
+			.title {
+				font-size: 3rem;
+				text-align: center;
+				margin-bottom: 2rem;
+				font-weight: lighter;
+			}
+
+			.container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: var(--square-gap);
+			}
+
+			.row {
+				display: flex;
+				gap: var(--square-gap);
+			}
+
+			.week {
+				width: var(--square-size);
+				height: var(--square-size);
+				border: 1px solid black;
+				border-radius: 3px;
+				flex-shrink: 0;
+			}
+
+			.lived {
+				background: black;
+			}
+
+			/* Add extra gap for months (every 4 weeks) */
+			.week:nth-child(4n + 1):not(:first-child) {
+				margin-left: var(--group-gap);
+			}
+
+			/* Add extra gap for decades (every 10 years) */
+			.row:nth-child(10n + 1):not(:first-child) {
+				margin-top: var(--group-gap);
+			}
+		</style>
+	</head>
+	<body>
+		<h1 class="title">Η ζωή μου σε εβδομάδες</h1>
+		<div class="container">
+			{Array.from({ length: 88 }).map((_, rowIndex) => (
+				<div class="grid row">
+					{Array.from({ length: rowIndex === 87 ? 49 : 52 }).map((_, colIndex) => {
+						const weekNumber = rowIndex * 52 + colIndex;
+						return (
+							<div 
+								class={`week ${weekNumber < weeksLived ? 'lived' : ''}`}
+								title={`Week ${weekNumber + 1}`}
+							/>
+						);
+					})}
+				</div>
+			))}
+		</div>
+	</body>
+</html>
