@@ -27,6 +27,7 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				--square-size: 12px;
 				--square-gap: 3px;
 				--group-gap: 8px;
+				--text-color: #262626;
 			}
 
 			body {
@@ -48,11 +49,42 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				flex-direction: column;
 				align-items: center;
 				gap: var(--square-gap);
+				position: relative;
+				margin: 2rem 4rem;
+			}
+
+			.week-label {
+				color: var(--text-color);
+				font-size: 10px;
+				position: relative;
+				top: -10px;
+			}
+
+			.year-label {
+				min-width: 25px;
+				text-align: right;
+				margin-right: 10px;
+				font-size: 10px;
+				color: var(--text-color);
+				visibility: visible;
+			}
+
+			.footer {
+				text-align: center;
+				margin-top: 3rem;
+				color: var(--text-color);
+				font-size: 0.7rem;
+			}
+
+			.heart {
+				font-size: 0.7rem;
+				margin-bottom: 0.5rem;
 			}
 
 			.row {
 				display: flex;
 				gap: var(--square-gap);
+				align-items: center;
 			}
 
 			.week {
@@ -62,13 +94,28 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				border-radius: 3px;
 				flex-shrink: 0;
 			}
+			.header-row {
+				justify-content: flex-start;
+				padding-left: 2px;
+				padding-bottom: 15px;
+				color: var(--text-color);
+				font-size: 10px;
+			}
+
+			.week.header {
+				height: 0;
+				border-color: white;
+				position: relative;
+			}
 
 			.lived {
 				background: black;
 			}
 
+
+
 			/* Add extra gap for months (every 4 weeks) */
-			.week:nth-child(4n + 1):not(:first-child) {
+			.week:nth-child(4n + 2) {
 				margin-left: var(--group-gap);
 			}
 
@@ -81,8 +128,25 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 	<body>
 		<h1 class="title">Η ζωή μου σε εβδομάδες</h1>
 		<div class="container">
+			<div class="grid row header-row">weeks</div>
+			<div class="grid row">
+				<div class="week header"></div>
+				<div class="week header"></div>
+
+				{Array.from({ length: 52 }).map((_, colIndex) => {
+					const addWeekHeader = colIndex === 0 || ((colIndex + 1) % 4 === 0);
+					return (
+						<div class="week header">
+							{addWeekHeader && <div class="week-label">{colIndex + 1}</div>}
+						</div>
+					);
+				})}
+			</div>
 			{Array.from({ length: 88 }).map((_, rowIndex) => (
 				<div class="grid row">
+					<div class="year-label" style={`visibility: ${rowIndex % 5 === 0 ? 'visible' : 'hidden'}`}>
+						{rowIndex}
+					</div>
 					{Array.from({ length: rowIndex === 87 ? 49 : 52 }).map((_, colIndex) => {
 						const weekNumber = rowIndex * 52 + colIndex;
 						return (
@@ -94,6 +158,11 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 					})}
 				</div>
 			))}
+		</div>
+
+		<div class="footer">
+			<div class="heart">💜</div>
+			<div>Made for Katerina with love</div>
 		</div>
 	</body>
 </html>
