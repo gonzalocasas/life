@@ -2,6 +2,13 @@
 const startDate = new Date('1985-04-26');
 const currentDate = new Date('2025-02-24');
 
+const weekContent = {
+	2023: {
+		title: '🐶 Lucy',
+		description: 'On March 23rd, you picked up Lucy and brought it into your home!'
+	}
+};
+
 // Calculate complete years
 const completeYears = Math.floor((currentDate - startDate) / (365.25 * 24 * 60 * 60 * 1000));
 const completeYearWeeks = completeYears * 52;
@@ -29,6 +36,7 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				--group-gap: 8px;
 				--dot-size: 3px;
 				--text-color: #262626;
+				--light-text-color: #888888;
 			}
 
 			body {
@@ -123,6 +131,84 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				margin: calc((var(--square-size) - var(--dot-size)) / 2);
 			}
 
+			.popup {
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: white;
+				padding: 1.5rem;
+				border-radius: 8px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				z-index: 1000;
+				max-width: 400px;
+				width: 90%;
+			}
+
+			.popup.show {
+				display: block;
+			}
+
+			.popup-title {
+				font-size: 1.2rem;
+				margin-bottom: 0.5rem;
+				color: var(--text-color);
+			}
+
+			.popup-description {
+				color: var(--text-color);
+				line-height: 1.5;
+				white-space: pre-line;
+			}
+
+			.popup-date {
+				font-size: 0.8rem;
+				color: var(--light-text-color);
+				display: block;
+				margin-bottom: 1rem;
+			}
+
+			.popup-close {
+				position: absolute;
+				top: 0.5rem;
+				right: 0.5rem;
+				padding: 0.5rem;
+				cursor: pointer;
+				color: var(--text-color);
+				opacity: 0.6;
+				transition: opacity 0.2s;
+			}
+
+			.popup-close:hover {
+				opacity: 1;
+			}
+
+			.week {
+				cursor: pointer;
+			}
+
+			.week:hover {
+				box-shadow: 0 0 0 2px var(--text-color);
+			}
+
+			.week.has-content {
+				position: relative;
+			}
+
+			.week.has-content::after {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 4px;
+				height: 4px;
+				background: var(--text-color);
+				border-radius: 50%;
+				opacity: 0.6;
+			}
+
 
 			/* Add extra gap for months (every 4 weeks) */
 			.week:nth-child(4n + 2) {
@@ -162,10 +248,25 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 					{Array.from({ length: 52 }).map((_, colIndex) => {
 						const weekNumber = rowIndex * 52 + colIndex;
 						const lastWeeks = rowIndex === 87 && colIndex >= 49;
+						const hasContent = weekContent[weekNumber] !== undefined;
+						
+						// Calculate dates using the same logic as the year calculation
+						const yearsFromStart = Math.floor(weekNumber / 52);
+						const weeksIntoYear = weekNumber % 52;
+						
+						const weekStartDate = new Date(startDate);
+						weekStartDate.setFullYear(weekStartDate.getFullYear() + yearsFromStart);
+						weekStartDate.setDate(weekStartDate.getDate() + (weeksIntoYear * 7));
+						
+						const weekEndDate = new Date(weekStartDate);
+						weekEndDate.setDate(weekEndDate.getDate() + 6);
 						return (
 							<div 
-								class={`week ${weekNumber < weeksLived ? 'lived' : ''} ${lastWeeks ? 'last-weeks' : ''}`}
-								title={`Week ${weekNumber + 1}`}
+								class={`week ${weekNumber < weeksLived ? 'lived' : ''} ${lastWeeks ? 'last-weeks' : ''} ${hasContent ? 'has-content' : ''}`}
+								title={`Week ${weekNumber + 1}${hasContent ? ' - ' + weekContent[weekNumber].title : ''}`}
+								data-week={weekNumber}
+								data-start={weekStartDate.toISOString()}
+								data-end={weekEndDate.toISOString()}
 							/>
 						);
 					})}
@@ -177,5 +278,69 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 			<div class="heart">💜</div>
 			<div>Made for Katerina with love</div>
 		</div>
+
+		<div class="popup" id="weekPopup">
+			<div class="popup-close">×</div>
+			<div class="popup-title"></div>
+			<div class="popup-date"></div>
+			<div class="popup-description"></div>
+		</div>
+
+		<script define:vars={{weekContent}}>
+			const closeButton = document.querySelector('.popup-close');
+			closeButton.addEventListener('click', () => {
+				document.getElementById('weekPopup').classList.remove('show');
+			});
+
+
+			const popup = document.getElementById('weekPopup');
+			const popupTitle = popup.querySelector('.popup-title');
+			const popupDescription = popup.querySelector('.popup-description');
+
+			document.addEventListener('click', (e) => {
+				if (e.target.classList.contains('week')) {
+					const weekNumber = parseInt(e.target.dataset.week);
+					const startDate = new Date(e.target.dataset.start);
+					const endDate = new Date(e.target.dataset.end);
+					const content = weekContent[weekNumber];
+					
+					// Calculate which week of the year this is
+					const yearsFromStart = Math.floor(weekNumber / 52);
+					const weeksIntoYear = weekNumber % 52;
+
+					const dateFormatter = new Intl.DateTimeFormat('en-US', { 
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					});
+
+					popupTitle.textContent = `Week ${weekNumber + 1}`;
+					const popupDate = popup.querySelector('.popup-date');
+					
+					// Just show the start date
+					popupDate.textContent = `Week starting on ${dateFormatter.format(startDate)}`;
+					
+					if (content) {
+						popupTitle.textContent = content.title;
+						popupDescription.textContent = content.description;
+					} else {
+						popupTitle.textContent = `Week ${weekNumber + 1}`;
+						popupDescription.textContent = '';
+					}
+					popup.classList.add('show');
+				}
+			});
+
+			function closePopup() {
+				popup.classList.remove('show');
+			}
+
+			// Close popup when clicking outside
+			document.addEventListener('click', (e) => {
+				if (!popup.contains(e.target) && !e.target.classList.contains('week')) {
+					closePopup();
+				}
+			});
+		</script>
 	</body>
 </html>
