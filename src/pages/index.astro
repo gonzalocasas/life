@@ -36,6 +36,57 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 		<meta name="generator" content={Astro.generator} />
 		<title>Η ζωή μου σε εβδομάδες : Κατερίνα</title>
 		<style>
+			@keyframes float {
+				0%, 100% { transform: translateY(0) rotate(90deg); }
+				50% { transform: translateY(-10px) rotate(90deg); }
+			}
+
+			.rotate-device-message {
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: white;
+				padding: 2rem;
+				text-align: center;
+				font-size: 1rem;
+				z-index: 1000;
+				border-radius: 8px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+				max-width: 90%;
+				width: 300px;
+			}
+
+			.rotate-device-message .icon {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+				display: inline-block;
+				animation: float 2s ease-in-out infinite;
+			}
+
+			.rotate-device-message .message {
+				line-height: 1.5;
+				color: var(--text-color);
+				margin-bottom: 1rem;
+			}
+
+			.rotate-device-message .button {
+				background: var(--text-color);
+				color: white;
+				padding: 0.5rem 1rem;
+				border-radius: 4px;
+				cursor: pointer;
+				display: inline-block;
+				margin-top: 0.5rem;
+			}
+
+			@media screen and (max-width: 760px) and (orientation: portrait) {
+				.rotate-device-message {
+					display: block;
+				}
+			}
+
 			:root {
 				--square-size: 12px;
 				--square-gap: 3px;
@@ -45,11 +96,39 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				--light-text-color: #888888;
 			}
 
+			@media (max-width: 1200px) {
+				:root {
+					--square-size: 10px;
+					--square-gap: 2px;
+					--group-gap: 6px;
+					--dot-size: 2px;
+				}
+			}
+
+			@media (max-width: 900px) {
+				:root {
+					--square-size: 8px;
+					--square-gap: 2px;
+					--group-gap: 4px;
+					--dot-size: 2px;
+				}
+			}
+
+			@media (max-width: 600px) {
+				:root {
+					--square-size: 6px;
+					--square-gap: 1px;
+					--group-gap: 3px;
+					--dot-size: 2px;
+				}
+			}
+
 			body {
 				background: white;
 				margin: 0;
-				padding: 2rem;
-				font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif; 
+				padding: 2rem 1rem;
+				font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
+				overflow-x: hidden;
 			}
 
 			.title {
@@ -59,13 +138,44 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				font-weight: lighter;
 			}
 
+			@media (max-width: 768px) {
+				.title {
+					font-size: 2rem;
+					margin-bottom: 1.5rem;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.title {
+					font-size: 1.5rem;
+					margin-bottom: 1rem;
+				}
+			}
+
 			.container, .header-container {
 				display: flex;
 				flex-direction: column;
-				align-items: center;
+				align-items: flex-start;
 				gap: var(--square-gap);
 				position: relative;
-				margin:  0 2rem 0 2rem;
+				margin: 0;
+				padding: 0;
+				width: max-content;
+			}
+
+			.grid-wrapper {
+				width: 100%;
+				overflow-x: auto;
+				-webkit-overflow-scrolling: touch;
+				scrollbar-width: none;
+				-ms-overflow-style: none;
+				padding: 0.5rem;
+				display: flex;
+				justify-content: center;
+			}
+
+			.grid-wrapper::-webkit-scrollbar {
+				display: none;
 			}
 
 			.header-container {
@@ -86,6 +196,23 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				font-size: 10px;
 				color: var(--text-color);
 				visibility: visible;
+				flex-shrink: 0;
+			}
+
+			@media (max-width: 900px) {
+				.year-label {
+					min-width: 20px;
+					margin-right: 5px;
+					font-size: 8px;
+				}
+			}
+
+			@media (max-width: 600px) {
+				.year-label {
+					min-width: 15px;
+					margin-right: 3px;
+					font-size: 7px;
+				}
 			}
 
 			.footer {
@@ -104,6 +231,7 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				display: flex;
 				gap: var(--square-gap);
 				align-items: center;
+				flex-shrink: 0;
 			}
 
 			.week {
@@ -320,10 +448,16 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 		</style>
 	</head>
 	<body>
+		<div class="rotate-device-message">
+			<div class="icon">📱</div>
+			<div class="message">For the best view of your life in weeks, please rotate your device to landscape mode</div>
+			<div class="button">Got it!</div>
+		</div>
 		<h1 class="title">Η ζωή μου σε εβδομάδες</h1>
-		<div class="header-container">
-			<div class="grid row header-row">weeks</div>
-			<div class="grid row">
+		<div class="grid-wrapper">
+			<div class="header-container">
+				<div class="grid row header-row">weeks</div>
+				<div class="grid row">
 				<div class="week header"></div>
 				<div class="week header"></div>
 
@@ -336,8 +470,10 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 					);
 				})}
 			</div>
+			</div>
 		</div>
-		<div class="container">
+		<div class="grid-wrapper">
+			<div class="container">
 			{Array.from({ length: 88 }).map((_, rowIndex) => (
 				<div class={`grid row year-${rowIndex % 3}`}>
 					<div class="year-label" style={`visibility: ${rowIndex % 5 === 0 ? 'visible' : 'hidden'}`}>
@@ -370,6 +506,7 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 					})}
 				</div>
 			))}
+			</div>
 		</div>
 
 		<div class="footer">
@@ -385,11 +522,43 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 		</div>
 
 		<script define:vars={{weekContent}}>
+			// Rotation message handling
+			const rotateMessage = document.querySelector('.rotate-device-message');
+			const rotateButton = rotateMessage.querySelector('.button');
+
+			// Function to show/hide rotation message based on orientation
+			function updateRotationMessage() {
+				const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+				const isDismissed = localStorage.getItem('rotateMessageDismissed') === 'true';
+				const isMobile = window.matchMedia("(max-width: 760px)").matches;
+
+				rotateMessage.style.display = (isPortrait && isMobile && !isDismissed) ? 'block' : 'none';
+			}
+
+			// Initial check
+			updateRotationMessage();
+
+			// Listen for orientation changes
+			window.addEventListener('orientationchange', updateRotationMessage);
+			window.addEventListener('resize', updateRotationMessage);
+
+			// Handle rotation message dismissal
+			rotateButton.addEventListener('click', () => {
+				rotateMessage.style.display = 'none';
+				localStorage.setItem('rotateMessageDismissed', 'true');
+			});
+
+			// Add a way to test the message (double click on title)
+			document.querySelector('.title').addEventListener('dblclick', () => {
+				localStorage.removeItem('rotateMessageDismissed');
+				updateRotationMessage();
+			});
+
+			// Week popup handling
 			const closeButton = document.querySelector('.popup-close');
 			closeButton.addEventListener('click', () => {
 				document.getElementById('weekPopup').classList.remove('show');
 			});
-
 
 			const popup = document.getElementById('weekPopup');
 			const popupTitle = popup.querySelector('.popup-title');
