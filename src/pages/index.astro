@@ -27,6 +27,7 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				--square-size: 12px;
 				--square-gap: 3px;
 				--group-gap: 8px;
+				--dot-size: 3px;
 				--text-color: #262626;
 			}
 
@@ -44,13 +45,17 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 				font-weight: lighter;
 			}
 
-			.container {
+			.container, .header-container {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				gap: var(--square-gap);
 				position: relative;
-				margin: 2rem 4rem;
+				margin:  0 2rem 0 2rem;
+			}
+
+			.header-container {
+				margin: 0rem 0rem;
 			}
 
 			.week-label {
@@ -111,7 +116,12 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 			.lived {
 				background: black;
 			}
-
+			
+			.last-weeks {
+				width: var(--dot-size);
+				height: var(--dot-size);
+				margin: calc((var(--square-size) - var(--dot-size)) / 2);
+			}
 
 
 			/* Add extra gap for months (every 4 weeks) */
@@ -127,7 +137,7 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 	</head>
 	<body>
 		<h1 class="title">Η ζωή μου σε εβδομάδες</h1>
-		<div class="container">
+		<div class="header-container">
 			<div class="grid row header-row">weeks</div>
 			<div class="grid row">
 				<div class="week header"></div>
@@ -142,16 +152,19 @@ const weeksLived = completeYearWeeks + remainingWeeks;
 					);
 				})}
 			</div>
+		</div>
+		<div class="container">
 			{Array.from({ length: 88 }).map((_, rowIndex) => (
 				<div class="grid row">
 					<div class="year-label" style={`visibility: ${rowIndex % 5 === 0 ? 'visible' : 'hidden'}`}>
 						{rowIndex}
 					</div>
-					{Array.from({ length: rowIndex === 87 ? 49 : 52 }).map((_, colIndex) => {
+					{Array.from({ length: 52 }).map((_, colIndex) => {
 						const weekNumber = rowIndex * 52 + colIndex;
+						const lastWeeks = rowIndex === 87 && colIndex >= 49;
 						return (
 							<div 
-								class={`week ${weekNumber < weeksLived ? 'lived' : ''}`}
+								class={`week ${weekNumber < weeksLived ? 'lived' : ''} ${lastWeeks ? 'last-weeks' : ''}`}
 								title={`Week ${weekNumber + 1}`}
 							/>
 						);
