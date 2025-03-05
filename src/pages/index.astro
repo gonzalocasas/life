@@ -491,7 +491,7 @@ const weeksLived = completeYearWeeks + remainingWeeks;
                         weekEndDate.setDate(weekEndDate.getDate() + 6);
                         return (
                             <div 
-                                class={`week ${weekNumber < weeksLived ? 'lived' : ''} ${lastWeeks ? 'last-weeks' : ''} ${hasContent ? 'has-content' : ''}`}
+                                class={`week ${weekNumber <= weeksLived ? 'lived' : ''} ${lastWeeks ? 'last-weeks' : ''} ${hasContent ? 'has-content' : ''}`}
                                 title={`Week ${weekNumber + 1}${hasContent ? ' - ' + weekContent[weekNumber].title : ''}`}
                                 data-week={weekNumber}
                                 data-start={weekStartDate.toISOString()}
