@@ -1,6 +1,9 @@
 ---
 const startDate = new Date('1985-04-26');
 const currentDate = new Date();
+console.log("Initializing 4000-Weeks with the following dates:");
+console.log(` - Reference date=${startDate}`);
+console.log(` - Current date=${currentDate}`);
 
 const weekContent = {
     1924: {
@@ -18,14 +21,17 @@ const weekContent = {
 // Calculate complete years
 const completeYears = Math.floor((currentDate - startDate) / (365.25 * 24 * 60 * 60 * 1000));
 const completeYearWeeks = completeYears * 52;
-
+console.log(`Completed years=${completeYears}, completed year weeks=${completeYearWeeks}`);
 // Calculate remaining weeks in current year
 const yearStartDate = new Date(startDate);
 yearStartDate.setFullYear(yearStartDate.getFullYear() + completeYears);
 const remainingWeeks = Math.floor((currentDate - yearStartDate) / (7 * 24 * 60 * 60 * 1000));
+console.log(`Year start date=${yearStartDate}`)
+console.log(`Remaining weeks in current year=${remainingWeeks}`);
 
 // Total weeks lived
 const weeksLived = completeYearWeeks + remainingWeeks;
+console.log(`Total weeks lived=${weeksLived}`);
 ---
 
 <html lang="en">
