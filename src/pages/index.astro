@@ -1,20 +1,31 @@
 ---
+import GalleriaAlbum from '../components/GalleriaAlbum.astro';
+
 const startDate = new Date('1985-04-26');
 const currentDate = new Date();
 console.log("Initializing 4000-Weeks with the following dates:");
 console.log(` - Reference date=${startDate}`);
 console.log(` - Current date=${currentDate}`);
 
-const weekContent = {
-    1924: {
+interface WeekDetails {
+    title: string;
+    description: string;
+}
+
+const weekContent: Record<string, WeekDetails> = {
+    '1924': {
         title: 'Tacos with crickets 🦗',
         description: `In the beginning there was nothing, and then the mexicans said "Let there be tacos!".
         
         On May 2nd, we stopped being two strangers, and started being us.`
     },
-    2023: {
+    '2023': {
         title: '🐶 Lucy',
         description: 'On March 23rd, you picked up Lucy and brought her into your home!'
+    },
+    '2080': {
+        title: '🎂 K40',
+        description: 'A gallery of 40 shades of pink'
     }
 };
 
@@ -483,8 +494,8 @@ console.log(`Total weeks lived=${weeksLived}`);
                     {Array.from({ length: 52 }).map((_, colIndex) => {
                         const weekNumber = rowIndex * 52 + colIndex;
                         const lastWeeks = rowIndex === 87 && colIndex >= 49;
-                        const hasContent = weekContent[weekNumber] !== undefined;
-                        
+                        const hasContent = weekContent[String(weekNumber)] !== undefined;
+                        const isBirthdayWeek = weekNumber === 2080; // 40th birthday week
                         // Calculate dates using the same logic as the year calculation
                         const yearsFromStart = Math.floor(weekNumber / 52);
                         const weeksIntoYear = weekNumber % 52;
@@ -521,6 +532,8 @@ console.log(`Total weeks lived=${weeksLived}`);
             <div class="popup-date"></div>
             <div class="popup-description"></div>
         </div>
+        
+        <GalleriaAlbum />
 
         <script define:vars={{weekContent}}>
             // Rotation message handling
@@ -562,19 +575,22 @@ console.log(`Total weeks lived=${weeksLived}`);
             });
 
             const popup = document.getElementById('weekPopup');
-            const popupTitle = popup.querySelector('.popup-title');
-            const popupDescription = popup.querySelector('.popup-description');
+            // Add null checks to prevent errors
+            const popupTitle = popup ? popup.querySelector('.popup-title') : null;
+            const popupDate = popup ? popup.querySelector('.popup-date') : null;
+            const popupDescription = popup ? popup.querySelector('.popup-description') : null;
 
             document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('week')) {
-                    const weekNumber = parseInt(e.target.dataset.week);
-                    const startDate = new Date(e.target.dataset.start);
-                    const endDate = new Date(e.target.dataset.end);
-                    const content = weekContent[weekNumber];
+                const weekElement = e.target.closest('.week');
+                if (weekElement) {
+                    const weekNumber = parseInt(weekElement.dataset.week, 10);
+                    // Check if this is the 40th birthday week (2080)
+                    const is40thBirthdayWeek = weekNumber === 2080;
+                    const content = weekContent[String(weekNumber)];
                     
-                    // Calculate which week of the year this is
-                    const yearsFromStart = Math.floor(weekNumber / 52);
-                    const weeksIntoYear = weekNumber % 52;
+                    // Get dates from dataset
+                    const weekStartDate = new Date(weekElement.dataset.start);
+                    const weekEndDate = new Date(weekElement.dataset.end);
 
                     const dateFormatter = new Intl.DateTimeFormat('en-US', { 
                         year: 'numeric',
@@ -582,25 +598,38 @@ console.log(`Total weeks lived=${weeksLived}`);
                         day: 'numeric'
                     });
 
-                    popupTitle.textContent = `Week ${weekNumber + 1}`;
-                    const popupDate = popup.querySelector('.popup-date');
+                    // Format date range for display
+                    const formattedDate = `${dateFormatter.format(weekStartDate)} - ${dateFormatter.format(weekEndDate)}`;
                     
-                    // Just show the start date
-                    popupDate.textContent = `Week starting on ${dateFormatter.format(startDate)}`;
-                    
-                    if (content) {
-                        popupTitle.textContent = content.title;
-                        popupDescription.textContent = content.description;
+                    // Handle 40th birthday week
+                    if (is40thBirthdayWeek) {
+                        if (typeof window.openBirthdayGallery === 'function') {
+                            window.openBirthdayGallery();
+                        }
+                    } else if (content) {
+                        // Show week with content
+                        if (popup && popupTitle && popupDate && popupDescription) {
+                            popupTitle.textContent = content.title;
+                            popupDate.textContent = formattedDate;
+                            popupDescription.innerHTML = content.description.replace(/\n/g, '<br>');
+                            popup.classList.add('show');
+                        }
                     } else {
-                        popupTitle.textContent = `Week ${weekNumber + 1}`;
-                        popupDescription.textContent = '';
+                        // Show regular week
+                        if (popup && popupTitle && popupDate && popupDescription) {
+                            popupTitle.textContent = `Week ${weekNumber + 1}`;
+                            popupDate.textContent = formattedDate;
+                            popupDescription.innerHTML = '';
+                            popup.classList.add('show');
+                        }
                     }
-                    popup.classList.add('show');
                 }
             });
 
             function closePopup() {
-                popup.classList.remove('show');
+                if (popup) {
+                    popup.classList.remove('show');
+                }
             }
 
             // Close popup when clicking outside

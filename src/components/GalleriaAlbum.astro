@@ -1,0 +1,581 @@
+---
+// Get the base URL for assets
+const baseUrl = import.meta.env.BASE_URL || '/';
+
+// Define the images directly in the component
+const photos = [
+  "1000001829.jpg",
+  "1000038834.jpg",
+  "COLOR_POP(1).jpg",
+  "COLOR_POP.jpg",
+  "IMG20220510005824.jpg",
+  "IMG20220526184335.jpg",
+  "IMG20220530214155.jpg",
+  "IMG20220702210846.jpg",
+  "IMG20220709175541.jpg",
+  "IMG20220709175552.jpg",
+  "IMG20220709221652.jpg",
+  "IMG20220709222912.jpg",
+  "IMG20220710001325.jpg",
+  "IMG20220710001404.jpg",
+  "IMG20220710002706.jpg",
+  "IMG20221119190743.jpg",
+  "IMG20221119195453.jpg",
+  "IMG20221119223129.jpg",
+  "IMG20230104133020.jpg",
+  "IMG20230104133023.jpg",
+  "IMG20230114193754.jpg",
+  "IMG20230210114811-COLLAGE.jpg",
+  "IMG20230210114811.jpg",
+  "IMG20230210132850.jpg",
+  "IMG20230210175910.jpg",
+  "IMG20230210191644.jpg",
+  "IMG20230211125212.jpg",
+  "IMG20230211135015.jpg",
+  "IMG20230211153812.jpg",
+  "IMG20230212173105.jpg",
+  "IMG20230212174854.jpg",
+  "IMG20230313230336.jpg",
+  "IMG20230420213157.jpg",
+  "IMG20230420213451.jpg",
+  "IMG20230518231653.jpg",
+  "IMG20230822215609.jpg",
+  "IMG20231014132757.jpg",
+  "IMG20231014133040.jpg",
+  "IMG20231014141557.jpg",
+  "IMG20231014141917.jpg",
+  "IMG20231014152545.jpg",
+  "IMG20231118183546.jpg",
+  "IMG20231118225129.jpg",
+  "IMG20231118225140.jpg",
+  "IMG20231211144744.jpg",
+  "IMG20240323104836_01.jpg",
+  "IMG20240323105209.jpg",
+  "IMG20240328155426.jpg",
+  "IMG20240331091947.jpg",
+  "IMG20240426171209.jpg",
+  "IMG20240502210815.jpg",
+  "IMG20240511183451.jpg",
+  "IMG20240525195218~2.jpg",
+  "IMG20240525195343.jpg",
+  "IMG20240525230627.jpg",
+  "IMG20240530203025.jpg",
+  "IMG20240608160247.jpg",
+  "IMG20240613132129.jpg",
+  "IMG20240711195651.jpg",
+  "IMG20240711195653.jpg",
+  "IMG_1683.jpg",
+  "IMG_20250423_005009_068.jpg",
+  "IMG_20250423_005047_629.jpg",
+  "IMG_20250423_005105_829.jpg",
+  "IMG_20250423_005108_862.jpg",
+  "IMG_20250423_005125_384.jpg",
+  "IMG_20250423_005157_579.jpg",
+  "IMG_20250423_005216_363.jpg",
+  "IMG_20250423_005230_479.jpg",
+  "IMG_20250423_005945_987.jpg",
+  "IMG_20250423_005949_045.jpg",
+  "IMG_20250423_005954_753.jpg",
+  "IMG_8931.jpg",
+  "IMG_8933.jpg",
+  "IMG_9055.jpg",
+  "IMG_9058.jpg",
+  "IMG_9098.PNG",
+  "IMG_9133.jpg",
+  "IMG_9183.jpg",
+  "IMG_9543.jpg",
+  "IMG_9891.jpg",
+  "IMG_9892.jpg",
+  "image-1.png",
+  "image-2.png",
+  "photo_2023-02-15_09-14-50.jpg",
+  "photo_2023-02-15_09-14-58.jpg",
+  "photo_2023-02-15_09-15-07.jpg",
+  "photo_2023-02-15_09-15-13.jpg",
+  "photo_2023-02-15_09-15-47.jpg",
+  "photo_2025-04-25 06.13.21.jpeg",
+  "photo_2025-04-25 06.13.25.jpeg",
+  "photo_2025-04-25 06.13.26.jpeg",
+  "photo_2025-04-25 06.13.27.jpeg",
+  "photo_2025-04-25 06.13.29.jpeg",
+  "photo_2025-04-25 06.13.30.jpeg",
+  "photo_2025-04-25 06.13.31.jpeg",
+  "photo_2025-04-25 06.13.32.jpeg",
+  "photo_2025-04-25 06.13.34.jpeg",
+  "photo_2025-04-25 06.13.35.jpeg",
+  "photo_2025-04-25 06.13.36.jpeg",
+  "photo_2025-04-25 06.13.37.jpeg",
+  "photo_2025-04-25 06.13.38.jpeg",
+  "photo_2025-04-25 06.13.40.jpeg",
+  "photo_2025-04-25 06.13.41.jpeg",
+  "photo_2025-04-25 06.13.42.jpeg",
+  "photo_2025-04-25 06.13.44.jpeg",
+  "photo_2025-04-25 06.13.45.jpeg",
+  "photo_2025-04-25 06.13.46.jpeg",
+  "photo_2025-04-25 06.13.48.jpeg",
+  "photo_2025-04-25 06.13.49.jpeg",
+  "photo_2025-04-25 06.13.51.jpeg",
+  "photo_2025-04-25 06.13.52.jpeg"
+];
+
+// Function to shuffle an array (Fisher-Yates algorithm)
+function shuffleArray(array) {
+  // Create a copy of the array to avoid modifying the original
+  const shuffled = [...array];
+  
+  // Fisher-Yates shuffle algorithm
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    // Pick a random index from 0 to i
+    const j = Math.floor(Math.random() * (i + 1));
+    
+    // Swap elements at indices i and j
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  
+  return shuffled;
+}
+
+// Shuffle the photos array
+const shuffledPhotos = shuffleArray(photos);
+
+// Generate full image paths from the shuffled array
+const imagePaths = shuffledPhotos.map(photo => `${baseUrl}/photos/birthday-40/${photo}`);
+---
+
+<!-- Simple custom photo gallery - no external dependencies -->
+<div id="birthday-gallery-container" class="gallery-container">
+  <div class="gallery-content">
+    <div class="gallery-header">
+      <h2>K40: 40 shades of pink</h2>
+      <button id="close-gallery" class="close-button" aria-label="Close gallery">×</button>
+    </div>
+    <div id="photo-viewer" class="photo-viewer">
+      <div class="loading-indicator" id="loading-indicator">
+        <div class="spinner"></div>
+      </div>
+      <img id="current-photo" src="" alt="Birthday photo" />
+      <div class="photo-controls">
+        <button id="prev-photo" class="nav-button">❮</button>
+        <button id="next-photo" class="nav-button">❯</button>
+      </div>
+      <div id="photo-counter" class="photo-counter">1 / {photos.length}</div>
+    </div>
+    
+    <div class="thumbnails-container">
+      <div id="thumbnails" class="thumbnails">
+        {imagePaths.map((path, index) => (
+          <img 
+            src={path} 
+            alt={`Thumbnail ${index + 1}`} 
+            class="thumbnail" 
+            data-index={index}
+            loading="lazy"
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Gallery container */
+  .gallery-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .gallery-content {
+    width: 90%;
+    height: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    background: #111;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: #222;
+    border-bottom: 1px solid #333;
+  }
+  
+  .gallery-header h2 {
+    color: white;
+    margin: 0;
+    font-size: 18px;
+    font-weight: normal;
+  }
+  
+  /* Photo viewer */
+  .photo-viewer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  #current-photo {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+    display: block;
+  }
+  
+  /* Loading indicator */
+  .loading-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  
+  .loading-indicator.active {
+    opacity: 1;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Navigation buttons */
+  .photo-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+  
+  .nav-button {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s;
+    pointer-events: auto;
+  }
+  
+  .nav-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Photo counter */
+  .photo-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  /* Thumbnails */
+  .thumbnails-container {
+    height: 120px;
+    background: #111;
+    padding: 10px 0;
+    overflow: hidden;
+    border-top: 1px solid #333;
+  }
+  
+  .thumbnails {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 0 20px;
+    height: 100%;
+    align-items: center;
+    scrollbar-width: thin;
+    scrollbar-color: #444 #111;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  .thumbnails::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .thumbnails::-webkit-scrollbar-track {
+    background: #111;
+  }
+  
+  .thumbnails::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 10px;
+  }
+  
+  .thumbnail {
+    height: 80px;
+    width: auto;
+    min-width: 60px; /* Ensure thumbnails have a minimum width */
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.6;
+    object-fit: cover; /* Make thumbnails consistent */
+  }
+  
+  .thumbnail:hover {
+    opacity: 0.9;
+  }
+  
+  .thumbnail.active {
+    border-color: #fff;
+    opacity: 1;
+  }
+  
+  /* Close button */
+  .close-button {
+    width: 30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid white;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .close-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+</style>
+
+<script is:inline>
+  // Simple Photo Gallery Script
+  document.addEventListener('DOMContentLoaded', function() {
+    // Gallery elements
+    var container = document.getElementById('birthday-gallery-container');
+    var currentPhoto = document.getElementById('current-photo');
+    var photoCounter = document.getElementById('photo-counter');
+    var prevButton = document.getElementById('prev-photo');
+    var nextButton = document.getElementById('next-photo');
+    var closeButton = document.getElementById('close-gallery');
+    var thumbnails = document.querySelectorAll('.thumbnail');
+    var loadingIndicator = document.getElementById('loading-indicator');
+    
+    // Gallery state
+    var currentIndex = 0;
+    var totalPhotos = thumbnails.length;
+    var imagePaths = [];
+    
+    // Collect all image paths
+    thumbnails.forEach(function(thumb) {
+      imagePaths.push(thumb.src);
+    });
+    
+    // Initialize gallery
+    function initGallery() {
+      // Set initial photo
+      if (imagePaths.length > 0) {
+        // Show loading indicator
+        if (loadingIndicator) loadingIndicator.classList.add('active');
+        
+        // Preload the first image
+        var img = new Image();
+        img.onload = function() {
+          currentPhoto.src = imagePaths[0];
+          if (loadingIndicator) loadingIndicator.classList.remove('active');
+          updateCounter();
+          highlightThumbnail();
+        };
+        img.onerror = function() {
+          if (loadingIndicator) loadingIndicator.classList.remove('active');
+        };
+        img.src = imagePaths[0];
+      }
+      
+      // Set up event listeners
+      prevButton.addEventListener('click', showPreviousPhoto);
+      nextButton.addEventListener('click', showNextPhoto);
+      
+      // Thumbnail click events
+      thumbnails.forEach(function(thumb) {
+        thumb.addEventListener('click', function() {
+          currentIndex = parseInt(this.getAttribute('data-index'));
+          updateGallery();
+        });
+      });
+      
+      // Keyboard navigation
+      document.addEventListener('keydown', handleKeyPress);
+    }
+    
+    // Update gallery with current photo
+    function updateGallery() {
+      // Show loading indicator
+      if (loadingIndicator) loadingIndicator.classList.add('active');
+      currentPhoto.style.opacity = '0.3';
+      
+      // Preload image to get correct dimensions
+      var img = new Image();
+      img.onload = function() {
+        currentPhoto.src = imagePaths[currentIndex];
+        currentPhoto.style.opacity = '1';
+        if (loadingIndicator) loadingIndicator.classList.remove('active');
+        updateCounter();
+        highlightThumbnail();
+        scrollToThumbnail();
+      };
+      img.onerror = function() {
+        currentPhoto.src = imagePaths[currentIndex];
+        currentPhoto.style.opacity = '1';
+        if (loadingIndicator) loadingIndicator.classList.remove('active');
+      };
+      img.src = imagePaths[currentIndex];
+    }
+    
+    // Update the photo counter
+    function updateCounter() {
+      photoCounter.textContent = (currentIndex + 1) + ' / ' + totalPhotos;
+    }
+    
+    // Highlight the current thumbnail
+    function highlightThumbnail() {
+      thumbnails.forEach(function(thumb) {
+        thumb.classList.remove('active');
+      });
+      
+      var activeThumbnail = document.querySelector('.thumbnail[data-index="' + currentIndex + '"]');
+      if (activeThumbnail) {
+        activeThumbnail.classList.add('active');
+      }
+    }
+    
+    // Scroll thumbnails to make current one visible
+    function scrollToThumbnail() {
+      var thumbsContainer = document.getElementById('thumbnails');
+      var activeThumbnail = document.querySelector('.thumbnail[data-index="' + currentIndex + '"]');
+      
+      if (thumbsContainer && activeThumbnail) {
+        var scrollLeft = activeThumbnail.offsetLeft - (thumbsContainer.clientWidth / 2) + (activeThumbnail.clientWidth / 2);
+        thumbsContainer.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
+        });
+      }
+    }
+    
+    // Show previous photo
+    function showPreviousPhoto() {
+      currentIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
+      updateGallery();
+    }
+    
+    // Show next photo
+    function showNextPhoto() {
+      currentIndex = (currentIndex + 1) % totalPhotos;
+      updateGallery();
+    }
+    
+    // Handle keyboard navigation
+    function handleKeyPress(e) {
+      if (!container || container.style.display !== 'flex') return;
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          showPreviousPhoto();
+          break;
+        case 'ArrowRight':
+          showNextPhoto();
+          break;
+        case 'Escape':
+          closeBirthdayGallery();
+          break;
+      }
+    }
+    
+    // Open gallery function
+    function openBirthdayGallery() {
+      if (!container) return;
+      
+      container.style.display = 'flex';
+      initGallery();
+    }
+    
+    // Close gallery function
+    function closeBirthdayGallery() {
+      if (!container) return;
+      container.style.display = 'none';
+    }
+    
+    // Close button event
+    if (closeButton) {
+      closeButton.addEventListener('click', closeBirthdayGallery);
+    }
+    
+    // Close when clicking outside the gallery content
+    if (container) {
+      container.addEventListener('click', function(e) {
+        if (e.target === container) {
+          closeBirthdayGallery();
+        }
+      });
+    }
+    
+    // Expose functions to global scope
+    window.openBirthdayGallery = openBirthdayGallery;
+    window.closeBirthdayGallery = closeBirthdayGallery;
+  });
+</script>
