@@ -8,6 +8,7 @@ A visual representation of life in weeks, inspired by Tim Urban's "Your Life in 
 - Visual grouping of months and decades
 - Weeks lived shown in black
 - Responsive design
+- Attach notes to special weeks
 
 ## Development
 
@@ -21,4 +22,3 @@ npm run dev
 # Build for production
 npm run build
 ```
-
